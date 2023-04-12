@@ -1,0 +1,45 @@
+
+---
+- name: Install Docker and run container
+  hosts: [g1]
+  become: true
+
+  tasks:
+    - name: Update apt repo and cache
+      apt:
+        update_cache: yes
+
+    - name: Install curl
+      apt:
+        name: curl
+        state: present
+      become: true
+
+    - name: Download Docker installation script
+      command: curl -fsSL https://get.docker.com -o get-docker.sh
+
+
+    - name: Install Docker using script
+      command: sh get-docker.sh
+
+    - name: Start Docker
+      systemd:
+        name: docker
+        state: started
+        enabled: true
+
+          # - name: Stop and delete container
+          #docker_container:
+          #name: my-container
+          #state: absent
+          #force_kill: true
+
+    - name: Run Docker container in detached mode on port 5000
+      docker_container:
+        name: flaskapp
+        image: derao/flask_app
+        state: started
+        detach: true
+        ports:
+          - "5000:5000"
+

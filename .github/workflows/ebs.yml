@@ -21,4 +21,4 @@ jobs:
             --application-name my-app \
             --environment-name my-env \
             --region us-east-1 \
-            --tier Standard
+            --tier=Standard

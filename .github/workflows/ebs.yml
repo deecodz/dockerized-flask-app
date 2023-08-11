@@ -21,5 +21,5 @@ jobs:
             --application-name my-app \
             --environment-name my-env \
             --region us-east-1 \
-            --tier WebServer \
+            --tier Type=Standard,Name=WebServer \
             --solution-stack-name "64bit Amazon Linux 2018.03 v2.9.3 running Python 3.6"

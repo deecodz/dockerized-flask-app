@@ -30,7 +30,9 @@ jobs:
           aws iam add-role-to-instance-profile --role-name test-role --instance-profile-name test-instance-profile         
 
       - name: Create Elastic Beanstalk Application
-        run: aws elasticbeanstalk create-application --application-name my-app --description "My application for Elastic Beanstalk"
+        run: | 
+          aws elasticbeanstalk describe-applications --application-name my-app \
+          || aws elasticbeanstalk create-application --application-name my-app --description "My application for Elastic Beanstalk"
 
       - name: Provision Elastic Beanstalk instance
         run: |

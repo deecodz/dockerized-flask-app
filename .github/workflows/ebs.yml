@@ -9,17 +9,20 @@ jobs:
       - name: Install AWS CLI
         run: sudo apt install awscli
 
-#       - name: Get Stacks
-#         run: aws elasticbeanstalk list-available-solution-stacks --region us-east-1
-
-      - name: Provision Elastic Beanstalk instance
+      - name: Get Stacks
         env: 
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: |
-          aws elasticbeanstalk create-environment \
-            --application-name my-app \
-            --environment-name my-env \
-            --region us-east-1 \
-            --tier Type=Standard,Name=WebServer
+        run: aws elasticbeanstalk list-available-solution-stacks --region us-east-1
+
+#       - name: Provision Elastic Beanstalk instance
+#         env: 
+#           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#         run: |
+#           aws elasticbeanstalk create-environment \
+#             --application-name my-app \
+#             --environment-name my-env \
+#             --region us-east-1 \
+#             --tier Type=Standard,Name=WebServer
 #             --solution-stack-name "64bit Amazon Linux 2015.03 v2.0.0 running Python 3.4"

@@ -42,7 +42,7 @@ jobs:
         run: |
           aws iam get-instance-profile --instance-profile-name test-instance-profile \
           || (aws iam create-instance-profile --instance-profile-name test-instance-profile &&
-          aws iam add-role-to-instance-profile --role-name my-role --instance-profile-name test-instance-profile)
+          aws iam add-role-to-instance-profile --role-name test-role --instance-profile-name test-instance-profile)
           
       - name: Create Elastic Beanstalk Application
         run: | 

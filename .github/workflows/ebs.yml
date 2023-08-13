@@ -50,7 +50,8 @@ jobs:
           aws elasticbeanstalk create-environment \
             --application-name my-app \
             --environment-name my-env \
-            --option-settings Namespace=aws:autoscaling:launchconfiguration,OptionName=IamInstanceProfile,Value=test-instance-profile,OptionName=KeyName,Value=testkey \
+            --option-settings Namespace=aws:autoscaling:launchconfiguration,OptionName=IamInstanceProfile,Value=test-instance-profile \
+            Namespace=aws:autoscaling:launchconfiguration,OptionName=KeyName,Value=testkey \
             --region us-east-1 \
             --tier Type=Standard,Name=WebServer \
             --solution-stack-name "64bit Amazon Linux 2023 v4.0.3 running Python 3.9"

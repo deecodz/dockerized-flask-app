@@ -53,7 +53,7 @@ jobs:
         run: |
           aws elasticbeanstalk create-environment \
             --application-name my-app \
-            --environment-name my-env \
+            --environment-name my-env-new \
             --option-settings Namespace=aws:autoscaling:launchconfiguration,OptionName=IamInstanceProfile,Value=test-instance-profile \
             Namespace=aws:autoscaling:launchconfiguration,OptionName=EC2KeyName,Value=testkey \
             --region us-east-1 \

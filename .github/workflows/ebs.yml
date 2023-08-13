@@ -22,17 +22,17 @@ jobs:
 
       - name: Create EC2 key pair and store in Secrets Manager
         run: |
-            KEY_NAME="testkey"
-            SECRET_NAME="MytestkeyPrivateKey"
-            
-            # Create the key pair
-            PRIVATE_KEY=$(aws ec2 create-key-pair --key-name $KEY_NAME | jq -r '.KeyMaterial')
-            
-            # Try to create the secret. This will fail silently if the secret already exists.
-            aws secretsmanager create-secret --name $SECRET_NAME --secret-string "$PRIVATE_KEY" --cli-input-idempotent || true
-            
-            # Update the secret. This will work whether or not the secret was just created.
-            aws secretsmanager put-secret-value --secret-id $SECRET_NAME --secret-string "$PRIVATE_KEY"
+           KEY_NAME="my-keypair"
+           SECRET_NAME="MyEC2PrivateKey"
+          
+           # Create the key pair
+           PRIVATE_KEY=$(aws ec2 create-key-pair --key-name $KEY_NAME | jq -r '.KeyMaterial')
+          
+           # Attempt to create the secret. If the secret already exists, this will throw an error, but we'll ignore it.
+           aws secretsmanager create-secret --name $SECRET_NAME --secret-string "$PRIVATE_KEY" || echo "Secret already exists. Updating..."
+    
+           # Update the secret. This will work whether or not the secret was just created.
+           aws secretsmanager put-secret-value --secret-id $SECRET_NAME --secret-string "$PRIVATE_KEY"
           
       - name: Create instance profile and associate role
         run: |

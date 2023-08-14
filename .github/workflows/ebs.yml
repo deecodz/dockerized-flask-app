@@ -59,7 +59,7 @@ jobs:
         run: |
           aws elasticbeanstalk create-environment \
             --application-name my-app \
-            --environment-name my-env-new \
+            --environment-name my-env-newer \
             --option-settings Namespace=aws:autoscaling:launchconfiguration,OptionName=IamInstanceProfile,Value=test-instance-profile \
             Namespace=aws:autoscaling:launchconfiguration,OptionName=EC2KeyName,Value=testkey \
             Namespace=aws:autoscaling:launchconfiguration,OptionName=SecurityGroups,Value=$SECURITY_GROUP_ID \

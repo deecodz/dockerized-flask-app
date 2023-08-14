@@ -1,5 +1,26 @@
 on:
   workflow_dispatch:
+    inputs:
+      instance_profile_name:
+        description: 'Instance Profile Name'
+        required: true
+        default: 'test-instance-profile'
+      app_name:
+        description: 'Elastic Beanstalk Application Name'
+        required: true
+        default: 'my-app'
+      env_name:
+        description: 'Elastic Beanstalk Environment Name'
+        required: true
+        default: 'my-env-newer'
+      security_group_id:
+        description: 'Security Group ID'
+        required: true
+        default: 'sg-057e29ae047c5469d'
+      aws_region:
+        description: 'AWS Region'
+        required: true
+        default: 'us-east-1'
 
 jobs:
   provision-eb-instance:
@@ -18,51 +39,31 @@ jobs:
         run: |
           aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
           aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-          aws configure set region us-east-1
+          aws configure set region ${{ github.event.inputs.aws_region }}
 
-      - name: Create EC2 key pair and store in Secrets Manager
-        run: |
-            KEY_NAME="testkey"
-            SECRET_NAME="MytestkeyPrivateKey"
-            
-            # Try to create the key pair. If it already exists, ignore the error.
-            PRIVATE_KEY=$(aws ec2 create-key-pair --key-name $KEY_NAME 2>/dev/null | jq -r '.KeyMaterial' || echo "")
-      
-            # If we couldn't get a private key from the create command, assume it exists and fetch it.
-            [ -z "$PRIVATE_KEY" ] && PRIVATE_KEY=$(aws ec2 describe-key-pairs --key-name $KEY_NAME | jq -r '.KeyPair.KeyMaterial')
-      
-            # Try to create the secret. If it already exists, this will fail and we'll proceed to the next command.
-            aws secretsmanager create-secret --name $SECRET_NAME --secret-string "$PRIVATE_KEY" 2>/dev/null || true
-      
-            # Update the secret with the private key.
-            aws secretsmanager put-secret-value --secret-id $SECRET_NAME --secret-string "$PRIVATE_KEY"
-
-          
       - name: Create instance profile and associate role
         run: |
-          aws iam get-instance-profile --instance-profile-name test-instance-profile \
-          || (aws iam create-instance-profile --instance-profile-name test-instance-profile &&
-          aws iam add-role-to-instance-profile --role-name test-role --instance-profile-name test-instance-profile)
+          aws iam get-instance-profile --instance-profile-name ${{ github.event.inputs.instance_profile_name }} \
+          || (aws iam create-instance-profile --instance-profile-name ${{ github.event.inputs.instance_profile_name }} &&
+          aws iam add-role-to-instance-profile --role-name test-role --instance-profile-name ${{ github.event.inputs.instance_profile_name }})
           
       - name: Create Elastic Beanstalk Application
         run: | 
-          aws elasticbeanstalk describe-applications --application-name my-app \
-          || aws elasticbeanstalk create-application --application-name my-app --description "My application for Elastic Beanstalk"
+          aws elasticbeanstalk describe-applications --application-name ${{ github.event.inputs.app_name }} \
+          || aws elasticbeanstalk create-application --application-name ${{ github.event.inputs.app_name }} --description "My application for Elastic Beanstalk"
 
       - name: Attach Existing Security Group to Elastic Beanstalk
         run: |
-          SECURITY_GROUP_ID="sg-057e29ae047c5469d"  
-          echo "SECURITY_GROUP_ID=$SECURITY_GROUP_ID" >> $GITHUB_ENV
+          echo "SECURITY_GROUP_ID=${{ github.event.inputs.security_group_id }}" >> $GITHUB_ENV
 
-          
       - name: Provision Elastic Beanstalk instance
         run: |
           aws elasticbeanstalk create-environment \
-            --application-name my-app \
-            --environment-name my-env-newer \
-            --option-settings Namespace=aws:autoscaling:launchconfiguration,OptionName=IamInstanceProfile,Value=test-instance-profile \
+            --application-name ${{ github.event.inputs.app_name }} \
+            --environment-name ${{ github.event.inputs.env_name }} \
+            --option-settings Namespace=aws:autoscaling:launchconfiguration,OptionName=IamInstanceProfile,Value=${{ github.event.inputs.instance_profile_name }} \
             Namespace=aws:autoscaling:launchconfiguration,OptionName=EC2KeyName,Value=testkey \
             Namespace=aws:autoscaling:launchconfiguration,OptionName=SecurityGroups,Value=$SECURITY_GROUP_ID \
-            --region us-east-1 \
+            --region ${{ github.event.inputs.aws_region }} \
             --tier Type=Standard,Name=WebServer \
             --solution-stack-name "64bit Amazon Linux 2023 v4.0.3 running Python 3.9"

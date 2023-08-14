@@ -13,14 +13,18 @@ on:
         description: 'Elastic Beanstalk Environment Name'
         required: true
         default: 'my-env-newer'
-      security_group_id:
-        description: 'Security Group ID'
+      vpc_id:
+        description: 'VPC ID'
         required: true
-        default: 'sg-057e29ae047c5469d'
+        default: 'vpc-08be2d942d24fc036'
       aws_region:
         description: 'AWS Region'
         required: true
         default: 'us-east-1'
+      security_group_name:
+        description: 'Name for the new Security Group'
+        required: true
+        default: 'eb-sg'
 
 jobs:
   provision-eb-instance:
@@ -46,15 +50,16 @@ jobs:
           aws iam get-instance-profile --instance-profile-name ${{ github.event.inputs.instance_profile_name }} \
           || (aws iam create-instance-profile --instance-profile-name ${{ github.event.inputs.instance_profile_name }} &&
           aws iam add-role-to-instance-profile --role-name test-role --instance-profile-name ${{ github.event.inputs.instance_profile_name }})
-          
+
       - name: Create Elastic Beanstalk Application
         run: | 
           aws elasticbeanstalk describe-applications --application-name ${{ github.event.inputs.app_name }} \
           || aws elasticbeanstalk create-application --application-name ${{ github.event.inputs.app_name }} --description "My application for Elastic Beanstalk"
 
-      - name: Attach Existing Security Group to Elastic Beanstalk
+      - name: Create new Security Group
         run: |
-          echo "SECURITY_GROUP_ID=${{ github.event.inputs.security_group_id }}" >> $GITHUB_ENV
+          SECURITY_GROUP_ID=$(aws ec2 create-security-group --group-name ${{ github.event.inputs.security_group_name }} --description "Security group for Elastic Beanstalk" --vpc-id ${{ github.event.inputs.vpc_id }} | jq -r '.GroupId')
+          echo "SECURITY_GROUP_ID=$SECURITY_GROUP_ID" >> $GITHUB_ENV
 
       - name: Provision Elastic Beanstalk instance
         run: |

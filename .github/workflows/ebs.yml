@@ -48,6 +48,12 @@ jobs:
         run: | 
           aws elasticbeanstalk describe-applications --application-name my-app \
           || aws elasticbeanstalk create-application --application-name my-app --description "My application for Elastic Beanstalk"
+
+      - name: Attach Existing Security Group to Elastic Beanstalk
+        run: |
+          SECURITY_GROUP_ID="sg-057e29ae047c5469d"  
+          echo "SECURITY_GROUP_ID=$SECURITY_GROUP_ID" >> $GITHUB_ENV
+
           
       - name: Provision Elastic Beanstalk instance
         run: |
@@ -56,6 +62,7 @@ jobs:
             --environment-name my-env-new \
             --option-settings Namespace=aws:autoscaling:launchconfiguration,OptionName=IamInstanceProfile,Value=test-instance-profile \
             Namespace=aws:autoscaling:launchconfiguration,OptionName=EC2KeyName,Value=testkey \
+            Namespace=aws:autoscaling:launchconfiguration,OptionName=SecurityGroups,Value=$SECURITY_GROUP_ID \
             --region us-east-1 \
             --tier Type=Standard,Name=WebServer \
             --solution-stack-name "64bit Amazon Linux 2023 v4.0.3 running Python 3.9"

@@ -90,7 +90,7 @@ jobs:
             --environment-name ${{ github.event.inputs.env_name }} \
             --option-settings Namespace=aws:autoscaling:launchconfiguration,OptionName=IamInstanceProfile,Value=${{ github.event.inputs.instance_profile_name }} \
             Namespace=aws:autoscaling:launchconfiguration,OptionName=EC2KeyName,Value=testkey \
-            Namespace=aws:autoscaling:launchconfiguration,OptionName=SecurityGroups,Value=${{ steps.create_sg.outputs.sg_id }} \
+            Namespace=aws:autoscaling:launchconfiguration,OptionName=SecurityGroups,Value=${{ github.event.inputs.security_group_name }} \
             --region ${{ github.event.inputs.aws_region }} \
             --tier Type=Standard,Name=WebServer \
             --solution-stack-name "${{ github.event.inputs.solution_stack }}"

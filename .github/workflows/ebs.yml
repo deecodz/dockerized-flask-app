@@ -73,6 +73,8 @@ jobs:
           
           # Set the output variable for this step
           echo "::set-output name=sg_id::$SECURITY_GROUP_ID"
+          # Sleep for a short delay to allow for AWS resource propagation
+          sleep 20
 
           
       - name: Provision Elastic Beanstalk instance

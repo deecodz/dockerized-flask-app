@@ -61,17 +61,19 @@ jobs:
           || aws elasticbeanstalk create-application --application-name ${{ github.event.inputs.app_name }} --description "My application for Elastic Beanstalk"
 
       - name: Create New Security Group
+        id: create_sg  # Assign an ID to the step
         run: |
           SECURITY_GROUP_ID=$(aws ec2 create-security-group --group-name ${{ github.event.inputs.security_group_name }} --description "Security group for Elastic Beanstalk" --vpc-id ${{ github.event.inputs.vpc_id }} | jq -r '.GroupId')
           
           # Add SSH (port 22) inbound rule
           aws ec2 authorize-security-group-ingress --group-id $SECURITY_GROUP_ID --protocol tcp --port 22 --cidr 0.0.0.0/0
-
+      
           # Add HTTP (port 80) inbound rule
           aws ec2 authorize-security-group-ingress --group-id $SECURITY_GROUP_ID --protocol tcp --port 80 --cidr 0.0.0.0/0
           
-          # Output the security group ID for subsequent steps
-          echo "SECURITY_GROUP_ID=$SECURITY_GROUP_ID" >> $GITHUB_ENV
+          # Set the output variable for this step
+          echo "::set-output name=sg_id::$SECURITY_GROUP_ID"
+
           
       - name: Provision Elastic Beanstalk instance
         run: |

@@ -80,8 +80,6 @@ jobs:
           # Sleep for a short delay to allow for AWS resource propagation
           sleep 20
 
-
-          
       - name: Provision Elastic Beanstalk instance
         run: |
           aws elasticbeanstalk create-environment \

@@ -63,17 +63,13 @@ jobs:
       - name: Create New Security Group
         id: create_sg  # Assign an ID to the step
         run: |
-          # Try to fetch existing security group ID
-          SECURITY_GROUP_ID=$(aws ec2 describe-security-groups --filters "Name=group-name,Values=${{ github.event.inputs.security_group_name }}" "Name=vpc-id,Values=${{ github.event.inputs.vpc_id }}" | jq -r '.SecurityGroups[0].GroupId')
+          SECURITY_GROUP_ID=$(aws ec2 create-security-group --group-name ${{ github.event.inputs.security_group_name }} --description "Security group for Elastic Beanstalk" --vpc-id ${{ github.event.inputs.vpc_id }} | jq -r '.GroupId')
           
-          # If security group doesn't exist, create a new one
-          [[ ! -z "$SECURITY_GROUP_ID" ]] || SECURITY_GROUP_ID=$(aws ec2 create-security-group --group-name ${{ github.event.inputs.security_group_name }} --description "Security group for Elastic Beanstalk" --vpc-id ${{ github.event.inputs.vpc_id }} | jq -r '.GroupId')
-          
-          # Add SSH (port 22) inbound rule; the "|| true" ensures that if the rule already exists, the command won't fail
-          aws ec2 authorize-security-group-ingress --group-id $SECURITY_GROUP_ID --protocol tcp --port 22 --cidr 0.0.0.0/0 || true
+          # Add SSH (port 22) inbound rule
+          aws ec2 authorize-security-group-ingress --group-id $SECURITY_GROUP_ID --protocol tcp --port 22 --cidr 0.0.0.0/0
       
           # Add HTTP (port 80) inbound rule
-          aws ec2 authorize-security-group-ingress --group-id $SECURITY_GROUP_ID --protocol tcp --port 80 --cidr 0.0.0.0/0 || true
+          aws ec2 authorize-security-group-ingress --group-id $SECURITY_GROUP_ID --protocol tcp --port 80 --cidr 0.0.0.0/0
           
           # Set the output variable for this step
           echo "::set-output name=sg_id::$SECURITY_GROUP_ID"

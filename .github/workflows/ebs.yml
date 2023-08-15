@@ -79,7 +79,7 @@ jobs:
           echo "::set-output name=sg_id::$SECURITY_GROUP_ID"
           
           # Sleep for a short delay to allow for AWS resource propagation
-          sleep 10
+          sleep 20
 
 
           

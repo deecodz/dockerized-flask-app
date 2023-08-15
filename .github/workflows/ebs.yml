@@ -4,11 +4,11 @@ on:
       role_name:
         description: 'Role Name'
         required: true
-        default: 'test-role'
+        #default: ' '
       instance_profile_name:
         description: 'Instance Profile Name'
         required: true
-        default: 'test-instance-profile'
+        #default: ' '
       app_name:
         description: 'Elastic Beanstalk Application Name'
         required: true
@@ -20,7 +20,7 @@ on:
       vpc_id:
         description: 'VPC ID'
         required: true
-        default: 'vpc-08be2d942d24fc036'
+        #default: 'vpc-08be2d942d24fc036'
       aws_region:
         description: 'AWS Region'
         required: true
@@ -32,7 +32,7 @@ on:
       solution_stack:
         description: 'Elastic Beanstalk Solution Stack'
         required: true
-        default: '64bit Amazon Linux 2023 v4.0.3 running Python 3.9'
+        #default: '64bit Amazon Linux 2023 v4.0.3 running Python 3.9'
 
 jobs:
   provision-eb-instance:

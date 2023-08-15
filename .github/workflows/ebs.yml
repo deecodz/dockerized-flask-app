@@ -57,7 +57,7 @@ jobs:
 
       - name: Create Elastic Beanstalk Application
         run: | 
-          aws elasticbeanstalk describe-applications --application-name ${{ github.event.inputs.app_name }} \
+          aws elasticbeanstalk describe-applications --application-names ${{ github.event.inputs.app_name }} \
           || aws elasticbeanstalk create-application --application-name ${{ github.event.inputs.app_name }} --description "My application for Elastic Beanstalk"
 
       - name: Create New Security Group

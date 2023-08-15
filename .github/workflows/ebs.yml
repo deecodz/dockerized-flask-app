@@ -1,6 +1,10 @@
 on:
   workflow_dispatch:
     inputs:
+      role_name:
+        description: 'Role Name'
+        required: true
+        default: 'test-role'
       instance_profile_name:
         description: 'Instance Profile Name'
         required: true
@@ -53,7 +57,7 @@ jobs:
         run: |
           aws iam get-instance-profile --instance-profile-name ${{ github.event.inputs.instance_profile_name }} \
           || (aws iam create-instance-profile --instance-profile-name ${{ github.event.inputs.instance_profile_name }} &&
-          aws iam add-role-to-instance-profile --role-name test-role --instance-profile-name ${{ github.event.inputs.instance_profile_name }})
+          aws iam add-role-to-instance-profile --role-name ${{ github.event.inputs.role_name }} --instance-profile-name ${{ github.event.inputs.instance_profile_name }})
 
       - name: Create Elastic Beanstalk Application
         run: | 

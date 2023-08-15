@@ -8,11 +8,11 @@ on:
       app_name:
         description: 'Elastic Beanstalk Application Name'
         required: true
-        default: ' '
+        # default: ' '
       env_name:
         description: 'Elastic Beanstalk Environment Name'
         required: true
-        default: ' '
+        # default: ' '
       vpc_id:
         description: 'VPC ID'
         required: true
@@ -24,7 +24,7 @@ on:
       security_group_name:
         description: 'Name for the new Security Group'
         required: true
-        default: ' '
+        # default: ' '
       solution_stack:
         description: 'Elastic Beanstalk Solution Stack'
         required: true

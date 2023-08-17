@@ -3,6 +3,32 @@ name: Starter Workflow
 
 on:
   workflow_dispatch:
+    inputs:
+      role_name:
+        description: 'Role Name'
+        required: true
+      instance_profile_name:
+        description: 'Instance Profile Name'
+        required: true
+      app_name:
+        description: 'Elastic Beanstalk Application Name'
+        required: true
+      env_name:
+        description: 'Elastic Beanstalk Environment Name'
+        required: true
+      vpc_id:
+        description: 'VPC ID'
+        required: true
+      aws_region:
+        description: 'AWS Region'
+        required: true
+      security_group_name:
+        description: 'Name for the new Security Group'
+        required: true
+      solution_stack:
+        description: 'Elastic Beanstalk Solution Stack'
+        required: true
+
 
 jobs:
   call-eb-provisioning-template:

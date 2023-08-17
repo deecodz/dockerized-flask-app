@@ -1,93 +1,21 @@
+
+name: Starter Workflow
+
 on:
   workflow_dispatch:
-    inputs:
-      role_name:
-        description: 'Role Name'
-        required: true
-        #default: ' '
-      instance_profile_name:
-        description: 'Instance Profile Name'
-        required: true
-        #default: ' '
-      app_name:
-        description: 'Elastic Beanstalk Application Name'
-        required: true
-        # default: ' '
-      env_name:
-        description: 'Elastic Beanstalk Environment Name'
-        required: true
-        # default: ' '
-      vpc_id:
-        description: 'VPC ID'
-        required: true
-        #default: 'vpc-08be2d942d24fc036'
-      aws_region:
-        description: 'AWS Region'
-        required: true
-        default: 'us-east-1'
-      security_group_name:
-        description: 'Name for the new Security Group'
-        required: true
-        # default: ' '
-      solution_stack:
-        description: 'Elastic Beanstalk Solution Stack'
-        required: true
-        #default: '64bit Amazon Linux 2023 v4.0.3 running Python 3.9'
 
 jobs:
-  provision-eb-instance:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Install AWS CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y awscli jq
-
-      - name: Set up AWS credentials
-        env: 
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: |
-          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-          aws configure set region ${{ github.event.inputs.aws_region }}
-
-      - name: Create instance profile and associate role
-        run: |
-          aws iam get-instance-profile --instance-profile-name ${{ github.event.inputs.instance_profile_name }} \
-          || (aws iam create-instance-profile --instance-profile-name ${{ github.event.inputs.instance_profile_name }} &&
-          aws iam add-role-to-instance-profile --role-name ${{ github.event.inputs.role_name }} --instance-profile-name ${{ github.event.inputs.instance_profile_name }})
-
-      - name: Create Elastic Beanstalk Application
-        run: | 
-          aws elasticbeanstalk create-application --application-name ${{ github.event.inputs.app_name }} --description "My application for Elastic Beanstalk"
-
-      - name: Create New Security Group
-        id: create_sg  # Assign an ID to the step
-        run: |
-          SECURITY_GROUP_ID=$(aws ec2 create-security-group --group-name ${{ github.event.inputs.security_group_name }} --description "Security group for Elastic Beanstalk" --vpc-id ${{ github.event.inputs.vpc_id }} | jq -r '.GroupId')
-          
-          # Add SSH (port 22) inbound rule
-          aws ec2 authorize-security-group-ingress --group-id $SECURITY_GROUP_ID --protocol tcp --port 22 --cidr 0.0.0.0/0
-      
-          # Add HTTP (port 80) inbound rule
-          aws ec2 authorize-security-group-ingress --group-id $SECURITY_GROUP_ID --protocol tcp --port 80 --cidr 0.0.0.0/0
-          
-          # Set the output variable for this step
-          echo "::set-output name=sg_id::$SECURITY_GROUP_ID"
-          
-          # Sleep for a short delay to allow for AWS resource propagation
-          sleep 20
-
-      - name: Provision Elastic Beanstalk instance
-        run: |
-          aws elasticbeanstalk create-environment \
-            --application-name ${{ github.event.inputs.app_name }} \
-            --environment-name ${{ github.event.inputs.env_name }} \
-            --option-settings Namespace=aws:autoscaling:launchconfiguration,OptionName=IamInstanceProfile,Value=${{ github.event.inputs.instance_profile_name }} \
-            Namespace=aws:autoscaling:launchconfiguration,OptionName=EC2KeyName,Value=testkey \
-            Namespace=aws:autoscaling:launchconfiguration,OptionName=SecurityGroups,Value=${{ github.event.inputs.security_group_name }} \
-            --region ${{ github.event.inputs.aws_region }} \
-            --tier Type=Standard,Name=WebServer \
-            --solution-stack-name "${{ github.event.inputs.solution_stack }}"
+  call-eb-provisioning template:
+    uses: example-org/reusable-actions/.github/workflows/provision-eb.yml@main
+    with:
+      role_name: ${{ github.event.inputs.role_name }}
+      instance_profile_name: ${{ github.event.inputs.instance_profile_name }}
+      app_name: ${{ github.event.inputs.app_name }}
+      env_name: ${{ github.event.inputs.env_name }}
+      vpc_id: ${{ github.event.inputs.vpc_id }}
+      aws_region: ${{ github.event.inputs.aws_region }}
+      security_group_name: ${{ github.event.inputs.security_group_name }}
+      solution_stack: ${{ github.event.inputs.solution_stack }}
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

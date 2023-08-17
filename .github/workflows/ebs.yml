@@ -5,8 +5,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  call-eb-provisioning template:
-    uses: example-org/reusable-actions/.github/workflows/provision-eb.yml@main
+  call-eb-provisioning-template:
+    uses: deecodz/Provisioning_template/.github/workflows/provision-eb.yml@main
     with:
       role_name: ${{ github.event.inputs.role_name }}
       instance_profile_name: ${{ github.event.inputs.instance_profile_name }}

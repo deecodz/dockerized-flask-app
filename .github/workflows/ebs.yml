@@ -7,9 +7,9 @@ on:
       env_name:
         description: 'Environment Name'
         required: true
-      workflow_path:
-        description: 'Path to the reusable workflow'
-        required: true
+      # workflow_path:
+      #   description: 'Path to the reusable workflow'
+      #   required: true
 
 env:
   ROLE_NAME: ${{ vars.ROLE_NAME }}
@@ -24,7 +24,8 @@ env:
 
 jobs:
   workflow-to-use:
-     uses: ${{ github.event.inputs.workflow_path }}
+      uses: deecodz/Provisioning_template/.github/workflows/provision-eb.yml@main
+     # uses: ${{ github.event.inputs.workflow_path }}
      
   call-eb-provisioning-template:
     runs-on: ubuntu-latest

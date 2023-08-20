@@ -34,6 +34,7 @@ jobs:
       
     steps:
       - name: Call EB Provisioning Workflow
+        uses: deecodz/Provisioning_template/.github/workflows/provision-eb.yml@main
         with:
           role_name: ${{ env.ROLE_NAME }}
           instance_type: ${{ env.INSTANCE_TYPE }}

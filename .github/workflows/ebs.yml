@@ -9,16 +9,16 @@ on:
       # workflow_path:
       #   description: 'Path to the reusable workflow'
       #   required: true
-env:
-  ROLE_NAME: ${{ vars.ROLE_NAME }}
-  INSTANCE_TYPE: ${{ vars.INSTANCE_TYPE }}
-  INSTANCE_PROFILE_NAME: ${{ vars.INSTANCE_PROFILE_NAME }}
-  APP_NAME: ${{ vars.APP_NAME }}
-  ENV_NAME: ${{ vars.ENV_NAME }}
-  VPC_ID: ${{ vars.VPC_ID }}
-  AWS_REGION: ${{ vars.AWS_REGION }}
-  SECURITY_GROUP_NAME: ${{ vars.SECURITY_GROUP_NAME }}
-  SOLUTION_STACK: ${{ vars.SOLUTION_STACK }}
+# env:
+#   ROLE_NAME: ${{ vars.ROLE_NAME }}
+#   INSTANCE_TYPE: ${{ vars.INSTANCE_TYPE }}
+#   INSTANCE_PROFILE_NAME: ${{ vars.INSTANCE_PROFILE_NAME }}
+#   APP_NAME: ${{ vars.APP_NAME }}
+#   ENV_NAME: ${{ vars.ENV_NAME }}
+#   VPC_ID: ${{ vars.VPC_ID }}
+#   AWS_REGION: ${{ vars.AWS_REGION }}
+#   SECURITY_GROUP_NAME: ${{ vars.SECURITY_GROUP_NAME }}
+#   SOLUTION_STACK: ${{ vars.SOLUTION_STACK }}
 
 jobs:
   call-workflow:
@@ -29,12 +29,12 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     with:
-      role_name: $[[ vars.ROLE_NAME }}
-      instance_type: ${{ vars.INSTANCE_TYPE }}
-      instance_profile_name: ${{ vars.INSTANCE_PROFILE_NAME }}
-      app_name: ${{ vars.APP_NAME }}
-      env_name: ${{ vars.ENV_NAME }}
-      vpc_id: ${{ vars.VPC_ID }}
-      aws_region: ${{ vars.AWS_REGION }}
-      security_group_name: ${{ vars.SECURITY_GROUP_NAME }}
-      solution_stack: ${{ vars.SOLUTION_STACK }}
+      # role_name: ${{ vars.ROLE_NAME }}
+      # instance_type: ${{ vars.INSTANCE_TYPE }}
+      # instance_profile_name: ${{ vars.INSTANCE_PROFILE_NAME }}
+      # app_name: ${{ vars.APP_NAME }}
+      env_name: ${{ github.event.inputs.env_name }}
+      # vpc_id: ${{ vars.VPC_ID }}
+      # aws_region: ${{ vars.AWS_REGION }}
+      # security_group_name: ${{ vars.SECURITY_GROUP_NAME }}
+      # solution_stack: ${{ vars.SOLUTION_STACK }}

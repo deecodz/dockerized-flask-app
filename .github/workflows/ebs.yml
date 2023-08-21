@@ -24,7 +24,10 @@ jobs:
   call-workflow:
     uses: deecodz/Provisioning_template/.github/workflows/provision-eb.yml@main
     # uses: ${{ github.event.inputs.workflow_path }}
-    secrets: inherit
+    # secrets: inherit
+    secrets:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     with:
       role_name: $[[ vars.ROLE_NAME }}
       instance_type: ${{ vars.INSTANCE_TYPE }}

@@ -10,7 +10,7 @@ on:
       description:
         description: 'Description for the Elastic Beanstalk application'
         required: true
-        default: 'My application for Elastic Beanstalk'
+        type: string
 
 jobs:
   call-workflow:

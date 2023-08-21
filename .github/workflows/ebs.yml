@@ -26,12 +26,12 @@ jobs:
     # uses: ${{ github.event.inputs.workflow_path }}
     secrets: inherit
     with:
-      role_name: $[[ env.ROLE_NAME }}
-      instance_type: ${{ env.INSTANCE_TYPE }}
-      instance_profile_name: ${{ env.INSTANCE_PROFILE_NAME }}
-      app_name: ${{ env.APP_NAME }}
-      env_name: ${{ env.ENV_NAME }}
-      vpc_id: ${{ env.VPC_ID }}
-      aws_region: ${{ env.AWS_REGION }}
-      security_group_name: ${{ env.SECURITY_GROUP_NAME }}
-      solution_stack: ${{ env.SOLUTION_STACK }}
+      role_name: $[[ vars.ROLE_NAME }}
+      instance_type: ${{ vars.INSTANCE_TYPE }}
+      instance_profile_name: ${{ vars.INSTANCE_PROFILE_NAME }}
+      app_name: ${{ vars.APP_NAME }}
+      env_name: ${{ vars.ENV_NAME }}
+      vpc_id: ${{ vars.VPC_ID }}
+      aws_region: ${{ vars.AWS_REGION }}
+      security_group_name: ${{ vars.SECURITY_GROUP_NAME }}
+      solution_stack: ${{ vars.SOLUTION_STACK }}

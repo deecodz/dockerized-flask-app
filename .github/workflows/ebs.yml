@@ -7,6 +7,11 @@ on:
         description: 'Environment Name'
         required: true
 
+      description:
+        description: 'Description for the Elastic Beanstalk application'
+        required: true
+        default: 'My application for Elastic Beanstalk'
+
 jobs:
   call-workflow:
     uses: deecodz/Provisioning_template/.github/workflows/provision-eb.yml@main
@@ -16,3 +21,4 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     with:
       env_name: ${{ github.event.inputs.env_name }}
+      description: ${{ github.event.inputs.description}}

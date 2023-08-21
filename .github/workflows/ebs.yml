@@ -6,9 +6,9 @@ on:
       env_name:
         description: 'Environment Name'
         required: true
-      workflow_path:
-        description: 'Path to the reusable workflow'
-        required: true
+      # workflow_path:
+      #   description: 'Path to the reusable workflow'
+      #   required: true
 env:
   ROLE_NAME: ${{ vars.ROLE_NAME }}
   INSTANCE_TYPE: ${{ vars.INSTANCE_TYPE }}
@@ -23,6 +23,7 @@ env:
 jobs:
   call-workflow:
     uses: deecodz/Provisioning_template/.github/workflows/provision-eb.yml@main
+    # uses: ${{ github.event.inputs.workflow_path }}
     secrets: inherit
     with:
       role_name: $[[ env.ROLE_NAME }}

@@ -1,0 +1,24 @@
+name: Call RDS Database Provisioning
+
+on:
+  workflow_dispatch:
+    inputs:
+      db_engine:
+        description: 'Database Engine (postgres or mysql)'
+        required: true
+        type: string
+
+      environment_name:
+        description: 'GitHub Environment Name'
+        required: true
+        type: string
+
+jobs:
+  call-rds-provision:
+    uses: deecodz/Provisioning_template/.github/workflows/provision-eb.yml@main
+    secrets:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    with:
+      db_engine: ${{ github.event.inputs.db_engine }}
+      environment_name: ${{ github.event.inputs.environment_name }}

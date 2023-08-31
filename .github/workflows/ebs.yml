@@ -14,7 +14,7 @@ on:
 
 jobs:
   call-workflow:
-    uses: deecodz/Provisioning_template/.github/workflows/provision-eb.yml@main
+    uses: deecodz/Provisioning_template/.github/workflows/DB-prov.yml@main
     # secrets: inherit
     secrets:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

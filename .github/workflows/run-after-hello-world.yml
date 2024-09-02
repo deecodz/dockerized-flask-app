@@ -1,0 +1,14 @@
+name: Run After Hello World
+
+on:
+  workflow_run:
+    workflows: ["Hello World"]
+    types:
+      - completed
+
+jobs:
+  follow-up:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo Follow-up Message
+        run: echo "This runs after the Hello World workflow."

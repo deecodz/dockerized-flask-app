@@ -33,8 +33,15 @@ jobs:
         run: |
           DATE=$(date +%Y.%m.%d)
           LATEST_TAG=$(git tag -l "${DATE}.*" | sort -V | tail -n 1)
-          BUILD_NUMBER=$(printf "%03d" $((10#${LATEST_TAG##*.} + 1)))
-          [ -z "$LATEST_TAG" ] && BUILD_NUMBER="001"
+
+          # Extract the build number, only if LATEST_TAG is numeric
+          if [[ "$LATEST_TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.([0-9]+)$ ]]; then
+            LAST_BUILD_NUMBER=${BASH_REMATCH[1]}
+            BUILD_NUMBER=$(printf "%03d" $((LAST_BUILD_NUMBER + 1)))
+          else
+            BUILD_NUMBER="001"
+          fi
+
           RELEASE_VERSION="${DATE}.${BUILD_NUMBER}"
           [ "${BRANCH_NAME}" != "${DEFAULT_BRANCH}" ] && RELEASE_VERSION="${RELEASE_VERSION}.${BRANCH_NAME}"
           echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV

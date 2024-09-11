@@ -23,8 +23,11 @@ jobs:
   set_output:
     runs-on: ubuntu-latest
     needs: deploy_to_test
+    outputs:
+      trigger_db_migration: ${{ steps.set_trigger.outputs.trigger_db_migration }}
     steps:
       - name: Set trigger for Test DB Migration
+        id: set_trigger
         if: ${{ github.event_name == 'workflow_dispatch' }}
-        run: echo "trigger_db_migration=${{ toJSON(github.event.inputs.trigger_db_migration) }}" >> $GITHUB_ENV
-        
+        run: |
+          echo "::set-output name=trigger_db_migration::${{ toJSON(github.event.inputs.trigger_db_migration) }}"

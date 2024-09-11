@@ -2,7 +2,7 @@ name: Create Tag
 
 on:
   push:
-    branches: ['**']
+    branches: ['db']
   workflow_dispatch:
 
 permissions:

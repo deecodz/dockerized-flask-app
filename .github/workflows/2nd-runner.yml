@@ -6,9 +6,9 @@ on:
       - main
     types:
       - completed
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
   workflow_dispatch:
    inputs:
       run_migration:

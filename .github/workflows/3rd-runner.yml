@@ -1,19 +1,16 @@
-name: Test DB Migration
+name: Hello World Database Migration
 on:
   workflow_run:
-    workflows: ["ECS Test Deployment"]
-    branches:
-      - main
+    workflows: ['Hello World Deploy']
     types:
       - completed
+    branches:
+      - main
 
 jobs:
-  run_database_migration:
+  hello_world_migration:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event != 'workflow_dispatch' }}
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' && (github.event.workflow_run.event != 'workflow_dispatch' || needs.deploy_to_test.outputs.trigger_db_migration == 'true') }}
     steps:
-      - name: Check if Test DB Migration should run
-        run: |
-          echo "Running Test DB Migration if trigger_db_migration is set to true."
-      - name: Hello from DB Migration
-        run: echo "Hello from DB Migration"
+      - name: Run Hello World Migration
+        run: echo 'Hello, World! Database Migration'

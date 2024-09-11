@@ -26,4 +26,5 @@ jobs:
     steps:
       - name: Set trigger for Test DB Migration
         if: ${{ github.event_name == 'workflow_dispatch' }}
-        run: echo "trigger_db_migration=${{ github.event.inputs.trigger_db_migration }}" >> $GITHUB_ENV
+        run: echo "trigger_db_migration=${{ toJSON(github.event.inputs.trigger_db_migration) }}" >> $GITHUB_ENV
+        

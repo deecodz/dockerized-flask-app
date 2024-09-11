@@ -1,4 +1,4 @@
-name: ECS Test Deployment
+name: Hello World Deploy
 on:
   workflow_run:
     workflows: ["Create Tag"]
@@ -6,28 +6,16 @@ on:
       - main
     types:
       - completed
+  # push:
+  #   branches:
+  #     - main
   workflow_dispatch:
-    inputs:
-      trigger_db_migration:
-        description: "Should trigger Test DB Migration after completion"
-        required: true
-        type: boolean
 
 jobs:
-  deploy_to_test:
+  hello_world_deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Hello from ECS Test Deployment
-        run: echo "Hello from ECS Test Deployment"
-
-  set_output:
-    runs-on: ubuntu-latest
-    needs: deploy_to_test
-    outputs:
-      trigger_db_migration: ${{ steps.set_trigger.outputs.trigger_db_migration }}
-    steps:
-      - name: Set trigger for Test DB Migration
-        id: set_trigger
-        if: ${{ github.event_name == 'workflow_dispatch' }}
-        run: |
-          echo "::set-output name=trigger_db_migration::${{ toJSON(github.event.inputs.trigger_db_migration) }}"
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run Hello World Deploy
+        run: echo 'Hello, World! Deploy to ECS Test'

@@ -6,9 +6,9 @@ on:
       - main
     types:
       - completed
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
   workflow_dispatch:
    inputs:
       run_migration:
@@ -29,8 +29,9 @@ jobs:
       - name: Run Hello World Deploy
         run: echo 'Hello, World! Deploy to ECS Test'
       - name: Set run_migration output
-        run: echo "run_migration=${{ github.event.inputs.run_migration || 'false' }}" >> $GITHUB_OUTPUT
+        run: echo "run_migration=${{ github.event.inputs.run_migration || 'true' }}" >> $GITHUB_OUTPUT
         id: set_run_migration
 
     outputs:
       run_migration: ${{ steps.set_run_migration.outputs.run_migration }}
+      

@@ -1,0 +1,29 @@
+name: ECS Test Deployment
+on:
+  workflow_run:
+    workflows: ["Create Tag"]
+    branches:
+      - main
+    types:
+      - completed
+  workflow_dispatch:
+    inputs:
+      trigger_db_migration:
+        description: "Should trigger Test DB Migration after completion"
+        required: true
+        type: boolean
+
+jobs:
+  deploy_to_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hello from ECS Test Deployment
+        run: echo "Hello from ECS Test Deployment"
+
+  set_output:
+    runs-on: ubuntu-latest
+    needs: deploy_to_test
+    steps:
+      - name: Set trigger for Test DB Migration
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: echo "trigger_db_migration=${{ github.event.inputs.trigger_db_migration }}" >> $GITHUB_ENV

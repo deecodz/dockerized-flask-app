@@ -8,9 +8,12 @@ on:
       - completed
 
 jobs:
-  run_database_migration:
+ run_database_migration:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.inputs.trigger_db_migration == 'true' }}
     steps:
+      - name: Check if Test DB Migration should run
+        run: |
+          echo "Running Test DB Migration if trigger_db_migration is set to true."
       - name: Hello from DB Migration
+        if: ${{ github.event.workflow_run.conclusion == 'success' && (github.event.workflow_run.event != 'workflow_dispatch' || env.trigger_db_migration == 'true') }}
         run: echo "Hello from DB Migration"

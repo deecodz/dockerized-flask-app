@@ -1,12 +1,14 @@
-name: workflow_02
+name: Test Database Migration
 on:
-  repository_dispatch:
-    types: [Trigger Workflow]
+  workflow_run:
+    workflows: ['Deploy to ECS Test']
+    types:
+      - completed
 
 jobs:
-  cypress-run:
+  run_database_migration:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.outputs.run_migration == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Workflow 02 triggered by repository dispatch."
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Hello World from Test Database Migration
+        run: echo "Hello from Test Database Migration"

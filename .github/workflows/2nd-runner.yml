@@ -1,37 +1,22 @@
-name: Hello World Deploy
+name: workflow_01
 on:
-  workflow_run:
-    workflows: ["Create Tag"]
-    branches:
-      - main
-    types:
-      - completed
-  # push:
-  #   branches:
-  #     - main
   workflow_dispatch:
-   inputs:
-      run_migration:
-        description: 'Run database migration after deployment (true/false)'
+    inputs:
+      trigger_workflow_02:
+        description: 'Trigger workflow 02 (true or false)'
         required: true
-        type: choice
-        options:
-          - 'true'
-          - 'false'
         default: 'false'
 
 jobs:
-  hello_world_deploy:
+  build:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Run Hello World Deploy
-        run: echo 'Hello, World! Deploy to ECS Test'
-      - name: Set run_migration output
-        run: echo "run_migration=${{ github.event.inputs.run_migration || 'true' }}" >> $GITHUB_OUTPUT
-        id: set_run_migration
 
-    outputs:
-      run_migration: ${{ steps.set_run_migration.outputs.run_migration }}
-      
+    steps:
+      - name: Check if workflow_02 should be triggered
+        if: ${{ inputs.trigger_workflow_02 == 'true' }}
+        run: |
+          curl -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -H 'Accept: application/vnd.github.everest-preview+json' \
+          -u ${{ secrets.ACTIONS_KEY }} \
+          --data '{"event_type": "Trigger Workflow", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'" }}'
+      - uses: actions/checkout@v3

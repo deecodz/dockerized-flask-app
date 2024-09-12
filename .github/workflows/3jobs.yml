@@ -1,44 +1,12 @@
-name: Scheduled and Manual Workflow
-
-on:
-  schedule:
-    - cron: '*/10 * * * *'
-  workflow_dispatch:
-    inputs:
-      run_job1:
-        description: 'Run Job 1'
-        type: boolean
-        default: false
-      run_job2:
-        description: 'Run Job 2'
-        type: boolean
-        default: false
-      run_job3:
-        description: 'Run Job 3'
-        type: boolean
-        default: false
+name: workflow_02
+on: 
+  repository_dispatch:
+    types: [Trigger Workflow]
 
 jobs:
-  job1:
-    name: Job 1
-    if: ${{ github.event_name == 'schedule' || github.event.inputs.run_job1 == 'true' }}
+  cypress-run:
     runs-on: ubuntu-latest
     steps:
-      - name: Run Job 1
-        run: echo "Running Job 1"
-
-  job2:
-    name: Job 2
-    if: ${{ github.event_name == 'schedule' || github.event.inputs.run_job2 == 'true' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run Job 2
-        run: echo "Running Job 2"
-
-  job3:
-    name: Job 3
-    if: ${{ github.event_name == 'schedule' || github.event.inputs.run_job3 == 'true' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run Job 3
-        run: echo "Running Job 3"
+      - run: echo "Workflow 02 triggered by repository dispatch."
+      - name: Checkout code
+        uses: actions/checkout@v3

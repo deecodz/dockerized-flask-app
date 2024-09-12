@@ -1,21 +1,21 @@
-name: workflow_01
+name: Deploy to ECS Test
 on:
   workflow_dispatch:
     inputs:
-      trigger_workflow_02:
-        description: 'Trigger workflow 02 (true or false)'
-        required: true
-        default: 'false'
+      run_migration:
+        type: string  # Changed to string
+        default: "true"  # Treat as string
 
 jobs:
-  build:
+  deploy_to_test:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Check if workflow_02 should be triggered
-        if: ${{ inputs.trigger_workflow_02 == 'true' }}
-        run: |
-          curl -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
-          -H "Accept: application/vnd.github.everest-preview+json" \
-          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          --data '{"event_type": "Trigger Workflow"}'
+      - name: Hello World from Deploy to ECS Test
+        run: echo "Hello from Deploy to ECS Test"
+      
+      - name: Set output for run_migration
+        id: set_output
+        run: echo "::set-output name=run_migration::${{ github.event.inputs.run_migration }}"
+
+    outputs:
+      run_migration: ${{ steps.set_output.outputs.run_migration }}

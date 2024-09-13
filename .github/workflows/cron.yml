@@ -1,0 +1,15 @@
+name: Biweekly Friday Workflow
+
+on:
+  schedule:
+    - cron: '0 14 * * 5/2'
+
+jobs:
+  run-biweekly:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run a sample script
+        run: echo "This workflow runs every two weeks on Friday at 2 PM."

@@ -1,8 +1,8 @@
 name: Biweekly Friday Workflow
 
-on:
-  schedule:
-    - cron: '0 14 * * 5/2'
+# on:
+#   schedule:
+#     - cron: '0 14 * * 5/2'
 
 jobs:
   run-biweekly:

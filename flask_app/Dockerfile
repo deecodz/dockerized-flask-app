@@ -14,4 +14,4 @@ RUN pip install -r requirements.txt
 EXPOSE 5000
 
 # Adding a command to run python file
-CMD python ./main.py 
+CMD ["python", "./main.py"]
